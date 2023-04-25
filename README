@@ -2,3 +2,5 @@
 
 This sensor vastly outperforms the obsolete MPU6050!  Calibration is optional for the accelerometer, while once calibrated, 
 the gyro offsets are remarkably stable, leading to very low drift in estimated 3D orientation.
+
+Initial code commit tested on an Adafruit Feather ESP32-S2 TFT, using Arduino IDE 1.8.19
