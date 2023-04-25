@@ -1,6 +1,6 @@
 /*
 
-  Mahony fusion filter for ISM330DHCX 6DOF sensor,
+  Mahony fusion filter for ISM330DHCX 6DOF sensor
   S. J. Remington 4/2023
 
  tested with Adafruit Feather ESP32_S2 TFT
