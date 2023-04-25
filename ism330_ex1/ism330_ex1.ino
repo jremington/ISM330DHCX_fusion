@@ -10,7 +10,7 @@
 
 	Product:
 
-		https://www.sparkfun.com/products/19764
+		https://www.sparkfun.com/products/19764 
 
   Repository:
 
