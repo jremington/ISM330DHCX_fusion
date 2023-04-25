@@ -1,3 +1,3 @@
 # ISM330DHCX 6DOF Mahony fusion filter 
 
-This sensor vastly outperforms the obsolete MPU6050!  Calibration is optional for the accelerometer, while the gyro offsets are remarkably stable.
+This sensor vastly outperforms the obsolete MPU6050!  Calibration is optional for the accelerometer, while once calibrated, the gyro offsets are remarkably stable, leading to very low drift in estimated 3D orientation.
