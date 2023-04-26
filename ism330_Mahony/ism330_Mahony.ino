@@ -1,9 +1,9 @@
 /*
 
-  Mahony fusion filter for ISM330DHCX 6DOF sensor
+  Mahony fusion filter for ISM330DHCX 6DOF sensor,
   S. J. Remington 4/2023
 
- tested with Adafruit Feather ESP32_S2 TFT
+  tested with Adafruit Feather ESP32_S2 TFT
 
   Device library:
 		https://github.com/sparkfun/SparkFun_6DoF_ISM330DHCX_Arduino_Library
@@ -119,7 +119,7 @@ void setup() {
 void loop() {
 
   static unsigned long last_us = 0, now_us = 0; //microsecond loop timing.
- 
+
   // Check if both gyroscope and accelerometer data are available.
   if ( ISM330.checkStatus() ) {
     ISM330.getAccel(&acc);
@@ -145,54 +145,57 @@ void loop() {
 
     Mahony_update(Axyz[0], Axyz[1], Axyz[2], Gxyz[0], Gxyz[1], Gxyz[2], deltat);
 
-    // DEMO CODE
-    // Compute Tait-Bryan angles. >>>Strictly valid only for approximately level movement
-
-    // In this coordinate system, the positive z-axis is up, X north, Y west.
-    // Yaw is the angle between Sensor x-axis and Earth magnetic North
-    // (or true North if corrected for local declination, looking down on the sensor
-    // positive yaw is counterclockwise, which is not conventional for NED navigation.
-    // Pitch is angle between sensor x-axis and Earth ground plane, toward the
-    // Earth is positive, up toward the sky is negative. Roll is angle between
-    // sensor y-axis and Earth ground plane, y-axis up is positive roll. These
-    // arise from the definition of the homogeneous rotation matrix constructed
-    // from quaternions. Tait-Bryan angles as well as Euler angles are
-    // non-commutative; that is, the get the correct orientation the rotations
-    // must be applied in the correct order which for this configuration is yaw,
-    // pitch, and then roll.
-    // http://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles
-    // which has additional links.
-
-    // WARNING: This angular conversion is for DEMONSTRATION PURPOSES ONLY. It WILL
-    // MALFUNCTION for certain combinations of angles! See https://en.wikipedia.org/wiki/Gimbal_lock
-
-    float roll  = atan2((q[0] * q[1] + q[2] * q[3]), 0.5 - (q[1] * q[1] + q[2] * q[2]));
-    float pitch = asin(2.0 * (q[0] * q[2] - q[1] * q[3]));
-    //conventional yaw increases clockwise from North. Not that the MPU-6050 knows where North is.
-    float yaw   = -atan2((q[1] * q[2] + q[0] * q[3]), 0.5 - (q[2] * q[2] + q[3] * q[3]));
-    // to degrees
-    yaw   *= 180.0 / PI;
-    if (yaw < 0) yaw += 360.0; //compass circle
-    pitch *= 180.0 / PI;
-    roll *= 180.0 / PI;
+    // time to print?
 
     now_ms = millis(); //time to print?
     if (now_ms - last_ms >= print_ms) {
       last_ms = now_ms;
 
-      /* Debug prints
-        for (int i = 0; i < 3; i++) {
-              Serial.print(Axyz[i]); Serial.print(" ");
-            }
+      // DEMO ANGLE CODE
+      // Compute Tait-Bryan angles. >>>Strictly valid only for approximately level movement
 
-        for (int i = 0; i < 3; i++) {
-        Serial.print(Gxyz[i]); Serial.print(" ");
-        }
-        for (int i = 0; i < 4; i++) {
-        Serial.print(q[i]); Serial.print(" ");
-        }
-        Serial.println();
+      // In this coordinate system, the positive z-axis is up, X north, Y west.
+      // Yaw is the angle between Sensor x-axis and Earth magnetic North
+      // (or true North if corrected for local declination, looking down on the sensor
+      // positive yaw is counterclockwise, which is not conventional for NED navigation.
+      // Pitch is angle between sensor x-axis and Earth ground plane, toward the
+      // Earth is positive, up toward the sky is negative. Roll is angle between
+      // sensor y-axis and Earth ground plane, y-axis up is positive roll. These
+      // arise from the definition of the homogeneous rotation matrix constructed
+      // from quaternions. Tait-Bryan angles as well as Euler angles are
+      // non-commutative; that is, the get the correct orientation the rotations
+      // must be applied in the correct order which for this configuration is yaw,
+      // pitch, and then roll.
+      // http://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles
+      // which has additional links.
+
+      // WARNING: This angular conversion is for DEMONSTRATION PURPOSES ONLY. It WILL
+      // MALFUNCTION for certain combinations of angles! See https://en.wikipedia.org/wiki/Gimbal_lock
+
+      float roll  = atan2((q[0] * q[1] + q[2] * q[3]), 0.5 - (q[1] * q[1] + q[2] * q[2]));
+      float pitch = asin(2.0 * (q[0] * q[2] - q[1] * q[3]));
+      //conventional yaw increases clockwise from North. Not that the MPU-6050 knows where North is.
+      float yaw   = -atan2((q[1] * q[2] + q[0] * q[3]), 0.5 - (q[2] * q[2] + q[3] * q[3]));
+      // to degrees
+      yaw   *= 180.0 / PI;
+      if (yaw < 0) yaw += 360.0; //compass circle
+      pitch *= 180.0 / PI;
+      roll *= 180.0 / PI;
+
+      /* debug prints
+              for (int i = 0; i < 3; i++) {
+                    Serial.print(Axyz[i]); Serial.print(" ");
+                  }
+
+              for (int i = 0; i < 3; i++) {
+              Serial.print(Gxyz[i]); Serial.print(" ");
+              }
+              for (int i = 0; i < 4; i++) {
+              Serial.print(q[i]); Serial.print(" ");
+              }
+              Serial.println();
       */
+
       // print angles for serial plotter...
       //  Serial.print("ypr ");
       Serial.print(yaw, 0);
@@ -216,7 +219,8 @@ void loop() {
 //--------------------------------------------------------------------------------------------------
 // IMU algorithm update
 
-// acceleration vector must be normalized
+// ***acceleration vector must be normalized***
+
 void Mahony_update(float ax, float ay, float az, float gx, float gy, float gz, float deltat) {
   float recipNorm;
   float vx, vy, vz;
