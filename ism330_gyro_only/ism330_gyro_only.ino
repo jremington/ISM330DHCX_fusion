@@ -172,11 +172,11 @@ void loop() {
 
       // print angles for serial plotter...
       //  Serial.print("ypr ");
-      Serial.print(yaw, 0);
+      Serial.print(yaw, 1);
       Serial.print(", ");
-      Serial.print(pitch, 0);
+      Serial.print(pitch, 1);
       Serial.print(", ");
-      Serial.println(roll, 0);
+      Serial.println(roll, 1);
     }
   }
 }
